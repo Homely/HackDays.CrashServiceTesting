@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ConsoleApplication
@@ -9,21 +11,24 @@ namespace ConsoleApplication
 
         private static void Main(string[] args)
         {
-            // Setup.
-            _errorReportingService = new ExampleErrorReportingService(); // change to service being tested.
-
-            // Go!
-            DoWorkAsync().Wait();
-        }
-
-        private static Task DoWorkAsync()
-        {
             Console.WriteLine("Hi! This is an app to test how a service can record/report on some errors in a console/background application.");
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
 
-            // Report some errors!
-            return ReportSomeErrorsAsync();
+            // Setup.
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            var configuration = builder.Build();
+            var service = configuration.GetSection("sampleService");
+            Console.WriteLine($"Api key: {service["apiKey"]}");
+            Console.WriteLine($"Secret: {service["secret"]}");
+
+            _errorReportingService = new ExampleErrorReportingService(); // change to service being tested.
+
+            // Go!
+            ReportSomeErrorsAsync().Wait();
         }
 
         private static async Task ReportSomeErrorsAsync()
