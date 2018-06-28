@@ -21,11 +21,11 @@ namespace ConsoleApplication
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             var configuration = builder.Build();
-            var service = configuration.GetSection("sampleService");
-            Console.WriteLine($"Api key: {service["apiKey"]}");
-            Console.WriteLine($"Secret: {service["secret"]}");
+            var service = configuration.GetSection("sentry");
+            var dsn = service["dsn"];
+            Console.WriteLine($"Sentry DSN: {dsn}");
 
-            _errorReportingService = new ExampleErrorReportingService(); // change to service being tested.
+            _errorReportingService = new SentryErrorService(dsn);
 
             // Go!
             ReportSomeErrorsAsync().Wait();
@@ -60,6 +60,15 @@ namespace ConsoleApplication
             try
             {
                 throw new Exception("Exception with inner exception", new Exception("Inner exception"));
+            }
+            catch (Exception exception)
+            {
+                await _errorReportingService.ReportExceptionAsync(exception);
+            }
+
+            try
+            {
+                CallStackTest.CallSomething();
             }
             catch (Exception exception)
             {
