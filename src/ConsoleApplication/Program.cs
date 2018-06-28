@@ -23,9 +23,8 @@ namespace ConsoleApplication
             var configuration = builder.Build();
             var service = configuration.GetSection("sampleService");
             Console.WriteLine($"Api key: {service["apiKey"]}");
-            Console.WriteLine($"Secret: {service["secret"]}");
 
-            _errorReportingService = new ExampleErrorReportingService(); // change to service being tested.
+            _errorReportingService = new RaygunErrorReportingService(service["apiKey"]); // change to service being tested.
 
             // Go!
             ReportSomeErrorsAsync().Wait();
