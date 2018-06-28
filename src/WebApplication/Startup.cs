@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Bugsnag.AspNet.Core;
 
 namespace WebApplication
 {
@@ -11,6 +12,9 @@ namespace WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddBugsnag(configuration => {
+                configuration.ApiKey = "-your-api-key-";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
