@@ -21,11 +21,11 @@ namespace ConsoleApplication
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             var configuration = builder.Build();
-            var service = configuration.GetSection("sampleService");
-            Console.WriteLine($"Api key: {service["apiKey"]}");
-            Console.WriteLine($"Secret: {service["secret"]}");
+            var service = configuration.GetSection("exceptionless");
+            var apiKey = service["apiKey"];
+            Console.WriteLine($"Api key: {apiKey}");
 
-            _errorReportingService = new ExampleErrorReportingService(); // change to service being tested.
+            _errorReportingService = new ExceptionlessService(apiKey); // change to service being tested.
 
             // Go!
             ReportSomeErrorsAsync().Wait();
