@@ -21,11 +21,11 @@ namespace ConsoleApplication
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             var configuration = builder.Build();
-            var service = configuration.GetSection("sampleService");
-            Console.WriteLine($"Api key: {service["apiKey"]}");
-            Console.WriteLine($"Secret: {service["secret"]}");
+            var service = configuration.GetSection("rollbar");
+            var accessToken = service["accessToken"];
+            Console.WriteLine($"Access token: {accessToken}");
 
-            _errorReportingService = new ExampleErrorReportingService(); // change to service being tested.
+            _errorReportingService = new RollbarService(accessToken); // change to service being tested.
 
             // Go!
             ReportSomeErrorsAsync().Wait();
