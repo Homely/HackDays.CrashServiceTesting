@@ -21,11 +21,11 @@ namespace ConsoleApplication
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             var configuration = builder.Build();
-            var service = configuration.GetSection("sampleService");
-            Console.WriteLine($"Api key: {service["apiKey"]}");
-            Console.WriteLine($"Secret: {service["secret"]}");
+            var service = configuration.GetSection("appInsights");
+            var instrumentationKey = service["instrumentationKey"];
+            Console.WriteLine($"Instrumentation key: {instrumentationKey}");
 
-            _errorReportingService = new ExampleErrorReportingService(); // change to service being tested.
+            _errorReportingService = new AppInsightsService(instrumentationKey);
 
             // Go!
             ReportSomeErrorsAsync().Wait();
